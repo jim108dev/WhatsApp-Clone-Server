@@ -1,14 +1,13 @@
+import { ApolloServer, gql } from 'apollo-server-express';
 import { createTestClient } from 'apollo-server-testing';
-import { gql } from 'apollo-server-express';
-import { server } from '../../server';
 import { resetDb } from '../../db';
-import { mockAuth } from '../mocks/auth.provider';
+import schema from '../../schema';
 
 describe('Mutation.addMessage', () => {
   beforeEach(resetDb);
 
   it('should add message to specified chat', async () => {
-    mockAuth(1);
+    const server = new ApolloServer({ schema });
 
     const { query, mutate } = createTestClient(server);
 

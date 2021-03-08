@@ -1,17 +1,26 @@
-import http from 'http';
-import { app } from './app';
-import { origin, port } from './env';
-import { server } from './server';
+import { ApolloServer } from 'apollo-server-express';
+import cors from 'cors';
+import express from 'express';
+import schema from './schema';
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+app.get('/_ping', (req, res) => {
+  res.send('pong');
+});
+
+const server = new ApolloServer({ schema });
 
 server.applyMiddleware({
   app,
   path: '/graphql',
-  cors: { credentials: true, origin },
 });
 
-const httpServer = http.createServer(app);
-server.installSubscriptionHandlers(httpServer);
+const port = process.env.PORT || 4000;
 
-httpServer.listen(port, () => {
+app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });

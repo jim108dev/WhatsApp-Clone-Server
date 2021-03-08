@@ -1,14 +1,10 @@
+import { ApolloServer, gql } from 'apollo-server-express';
 import { createTestClient } from 'apollo-server-testing';
-import { gql } from 'apollo-server-express';
-import { server } from '../../server';
-import { resetDb } from '../../db';
-import { mockAuth } from '../mocks/auth.provider';
+import schema from '../../schema';
 
 describe('Query.chat', () => {
-  beforeEach(resetDb);
-
   it('should fetch specified chat', async () => {
-    mockAuth(1);
+    const server = new ApolloServer({ schema });
 
     const { query } = createTestClient(server);
 
